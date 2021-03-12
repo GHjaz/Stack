@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <string>
 using namespace std;
 
 #include "Stack.h"
@@ -8,12 +8,8 @@ using namespace std;
 
 int main() {
 	Stack<int> A;
-	A.pop();
-	try {
-		A.pop();	
+	for (int i = 0; i < 20; i++) {
+		A.push(i);
 	}
-	catch (const exc::EStackEmpty& e)
-	{
-	};
 	return 0;
 }
