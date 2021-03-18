@@ -1,31 +1,8 @@
-#include <cassert> // дл€ assert
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <string>
-#include <iomanip> // дл€ setw
-
-namespace exc {
-    class EStackExcepetion {
-    public:
-        EStackExcepetion(const char* arg_message) {
-            message = new char[strlen(arg_message) + 1];
-            int N = strlen(arg_message) + 1;
-            strcpy_s(message, N, arg_message);
-        }
-        const char* what() const { return message; }
-    private:
-        char* message;
-    };
-
-    class EStackEmpty :public EStackExcepetion {
-    public:
-        EStackEmpty(const char* arg) :EStackExcepetion(arg) {}
-    };
-
-    class EStackOverflow :public EStackExcepetion {
-    public:
-        EStackOverflow(const char* arg) :EStackExcepetion(arg) {}
-    };
-}
+#include "ExceptionStack.h"
 
 
 template <typename T>
@@ -36,17 +13,19 @@ private:
     const int size;                   // максимальное количество элементов в стеке
     int top;                          // номер текущего элемента стека
 public:
-    Stack(int = 1);                  // по умолчанию размер стека равен 1 
+    Stack(int = 10);                  // по умолчанию размер стека равен 1 
     Stack(const Stack<T>&);          // конструктор копировани€
     ~Stack();                         // деструктор
 
     inline void push(const T&);     // поместить элемент в вершину стека
     inline T pop();                   // удалить элемент из вершины стека и вернуть его
-    inline int getStackSize() const;  // получить размер стека
+    inline int getStackSize() const;    // получить размер стека
+    inline T* getPtr() const;         // получить указатель на стек
+    inline int getTop() const;        // получить номер текущего элемента в стеке
 
 };
 
-// реализаци€ методов шаблона класса STack
+
 
 // конструктор —тека
 template <typename T>
@@ -80,34 +59,41 @@ Stack<T>::~Stack()
 template <typename T>
 inline void Stack<T>::push(const T& value)
 {
-    try {
-       /* if (size >= top)
-            throw exc::EStackOverflow((char*)"Stack OverFlow");*/
-        stackPtr[top++] = value;
-    }
-    catch(const exc::EStackOverflow &e){
-        cout << e.what() << endl;
-    }// помещаем элемент в стек
+    //.. ќбрабатываем исключение
+    if (size == top) { throw exc::StackOverFlow("Stack Overflow"); }
+    
+    stackPtr[top++] = value;
+   
 }
 
-
+//..‘ункци€ удалени€
 template <typename T>
 inline T Stack<T>::pop()
 {
-
-    try {
-      /*  if (top == NULL)
-            throw exc::EStackEmpty((char*)"Stack Empty");*/
-        stackPtr[--top];
-    }
-    catch (const exc::EStackEmpty &e) {
-        cout << e.what() << endl;
-    }// помещаем элемент в стек
+    const char* Er = "Stack empty";
+    // .. ќбрабатываем исключени€
+    if (top == NULL) { throw exc::StackEmpty("Stack Empty"); }
+    stackPtr[--top];
 }
 
+// вернуть размер стека
 template <typename T>
 inline int Stack<T>::getStackSize() const
 {
     return size;
+}
+
+// вернуть указатель на стек (дл€ конструктора копировани€)
+template <typename T>
+inline T* Stack<T>::getPtr() const
+{
+    return stackPtr;
+}
+
+// вернуть размер стека
+template <typename T>
+inline int Stack<T>::getTop() const
+{
+    return top;
 }
 
