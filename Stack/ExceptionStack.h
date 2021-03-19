@@ -34,14 +34,14 @@ namespace exc {
 	{
 	public:
 		explicit StackOverFlow(const char* arg) : Exception(arg) {}
-		//..explicit StackOverFlow(const StackOverFlow& arg) : Exception(arg) {}
+		StackOverFlow(const StackOverFlow& arg) : Exception(arg) {}
 	};
 
 	class StackEmpty : public Exception
 	{
 	public:
 		explicit StackEmpty(const char* arg) : Exception(arg) {}
-		//..explicit StackEmpty(const StackEmpty& arg) : Exception(arg) {}
+		StackEmpty(const StackEmpty& arg) : Exception(arg) {}
 	};
 
 
